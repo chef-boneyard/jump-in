@@ -1,6 +1,6 @@
 # Chef Jump-In Site
 
-A simple website to list Github issues labelled with `Status: Good First Issue`.
+A simple website to list Github issues labelled with `Status: Good First Issue` available at https://chef.github.io/jump-in/
 
 ## Building Locally
 
