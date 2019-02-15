@@ -110,8 +110,8 @@ class Issue extends Component {
   filterLabels(labels) {
     var filteredLabels = labels.filter(function(label) {
       var name = label.name;
-      // for now, we only want type and area labels, and we already know we're a jump in.
-      if ((/^Status:/.test(name) && !/(Good First Issue)/.test(name)) || (/^Area:/.test(name))) {
+      // for now, we only want aspect, type or platform labels shown for each issue
+      if ((/^Aspect:/.test(name)) || (/^Type:/.test(name)) || (/^Platform:/.test(name))) {
         return true;
       }
       return false;
