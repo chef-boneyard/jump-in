@@ -12,16 +12,16 @@ var issuesUrl = "https://api.github.com/search/issues";
 var chefRepos = ["chef", "ohai", "mixlib-install", "chef-dk", "mixlib-authentication", "mixlib-shellout"];
 
 var issueTypes = [
-  { name: "Chef", selected: true, org: "chef", description: "Work on the chef-client, ohai, or any of the support libraries.", color: "#F18B21" },
-  { name: "Cookbooks", selected: true, org: "chef-cookbooks", description: "Work on our community cookbooks", color: "#F18B21" }
+  { name: "chef", selected: true, org: "chef", description: "Work on the chef-client, ohai, or any of the support libraries.", color: "#F18B21" },
+  { name: "chef-cookbooks", selected: true, org: "chef-cookbooks", description: "Work on our community cookbooks", color: "#F18B21" }
 ];
 
 var extractFunction = function(callback) {
   return function(rb, cb) {
-    var chef = rb[0].items, 
-    cookbooks = cb[0].items, 
+    var chef = rb[0].items,
+    cookbooks = cb[0].items,
     all = chef.concat(cookbooks);
-    
+
     all.sort(timeSort);
     callback(all);
   };
@@ -29,41 +29,41 @@ var extractFunction = function(callback) {
 
 var getOpenIssues = function(callback) {
   var repos = chefRepos.map( x => "repo:chef/" + x ).join("+");
-  
+
   var issues = $.ajax({
     dataType: "json",
     url: issuesUrl,
-    data: "q=is:issue+state:open+label:\"Type%3A+Jump+In\"+" + repos + "&sort=updated"
+    data: "q=is:issue+state:open+label:\"Status%3A+Good+First+Issue\"+" + repos + "&sort=updated"
   });
-  
+
   var cookbookIssues = $.ajax({
     dataType: "json",
     url: issuesUrl,
-    data: "q=is:issue+state:open+label:\"Type%3A+Jump+In\"+user:chef-cookbooks&sort=updated"
+    data: "q=is:issue+state:open+label:\"Status%3A+Good+First+Issue\"+user:chef-cookbooks&sort=updated"
   });
-  
+
   var dataExtractor = extractFunction(callback);
-  
+
   $.when(issues, cookbookIssues).done(dataExtractor);
 };
 
 var getMentoredIssues = function(callback) {
   var repos = chefRepos.map( x => "repo:chef/" + x ).join("+");
-  
+
   var issues = $.ajax({
     dataType: "json",
     url: issuesUrl,
     data: "q=is:issue+state:open+label:\"Type%3A+Mentored\"+" + repos + "&sort=updated"
   });
-  
+
   var cookbookIssues = $.ajax({
     dataType: "json",
     url: issuesUrl,
     data: "q=is:issue+state:open+label:\"Type%3A+Mentored\"+user:chef-cookbooks&sort=updated"
   });
-  
+
   var dataExtractor = extractFunction(callback);
-  
+
   $.when(issues, cookbookIssues).done(dataExtractor);
 };
 
@@ -72,11 +72,11 @@ class Filter extends Component {
     super(props);
     this.handleClick = this.handleClick.bind(this);
   }
-  
+
   handleClick(e) {
     this.props.onClick(this.props.filter.name);
   }
-  
+
   render() {
     const filter = this.props.filter;
     return (
@@ -93,7 +93,7 @@ class Label extends Component {
       return({ color: "black", backgroundColor: "#" + label.color });
     }
   }
-  
+
   render() {
     const label = this.props.label;
     return (
@@ -111,14 +111,14 @@ class Issue extends Component {
     var filteredLabels = labels.filter(function(label) {
       var name = label.name;
       // for now, we only want type and area labels, and we already know we're a jump in.
-      if ((/^Type:/.test(name) && !/(Jump In|Mentored)/.test(name)) || (/^Area:/.test(name))) {
+      if ((/^Status:/.test(name) && !/(Good First Issue)/.test(name)) || (/^Area:/.test(name))) {
         return true;
       }
       return false;
     });
     return filteredLabels;
   }
-  
+
   render() {
     const issue = this.props.issue;
     return (
@@ -152,7 +152,7 @@ class JumpIn extends Component {
     };
     this.selectRepo = this.selectRepo.bind(this);
   }
-  
+
   componentDidMount() {
     getOpenIssues(function(data) {
       this.setState({
@@ -174,17 +174,17 @@ class JumpIn extends Component {
         break;
       }
     }
-    
+
     this.setState(function(oldState) {
       var rf = oldState.repoFilters;
       rf[i].selected = !rf[i].selected;
       return { repoFilters: rf};
     });
   }
-    
+
   filterRepos() {
     var orgs = this.state.repoFilters.filter(function(repo) {
-      if (repo.selected) { 
+      if (repo.selected) {
         return true;
       }
       return false;
@@ -192,7 +192,7 @@ class JumpIn extends Component {
     var selectedOrgs = orgs.map(repo => repo.org);
     return selectedOrgs;
   }
-  
+
   filterIssues(issues, types) {
     var filteredIssues = issues.filter(function(issue) {
       for (var i = 0; i< types.length; i++) {
@@ -201,11 +201,11 @@ class JumpIn extends Component {
           return true;
         };
       }
-      return false; 
+      return false;
     });
     return filteredIssues;
   }
-   
+
   render() {
     return (
       <div className="JumpIn">
@@ -223,7 +223,7 @@ class JumpIn extends Component {
                 <span className="filters">
                   {this.state.repoFilters.map((filter) =>
                     <Filter filter={filter} onClick={this.selectRepo} />
-                  )}               
+                  )}
                 </span>
                 <h2>Issues to get started with</h2>
                 <ul>

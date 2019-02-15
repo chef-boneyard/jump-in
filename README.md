@@ -1,6 +1,6 @@
 # Chef Jump-In Site
 
-A simple website to list Github issues labelled with `Type: Jump In`.
+A simple website to list Github issues labelled with `Status: Good First Issue`.
 
 ## Building Locally
 
